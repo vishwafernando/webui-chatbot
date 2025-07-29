@@ -1,27 +1,42 @@
 import sys
 import os
+import getpass
 import re
-from huggingface_hub import snapshot_download
+from pathlib import Path
+import subprocess
 
 WEBUI_FILE = "webui_gradio.py"
-MODELS_DIR = "models"
+MODELS_BASE = "user_data/models"
 
-def model_id_from_link(link):
-    # Accepts full URLs or IDs
-    if link.startswith("https://huggingface.co/"):
-        parts = link.replace("https://huggingface.co/", "").strip("/").split("/")
-        # Remove "tree/main" or similar suffixes
-        if "tree" in parts:
-            parts = parts[:parts.index("tree")]
-        return "/".join(parts)
-    return link
+def run_download(model_id, threads=8):
+    # Use your fast downloader with more threads for speed
+    cmd = [
+        sys.executable, "download-model.py",
+        model_id,
+        "--threads", str(threads)
+    ]
+    print("Running:", " ".join(cmd))
+    result = subprocess.run(cmd)
+    if result.returncode != 0:
+        print("Download failed!")
+        sys.exit(1)
 
-def download_model(model_id):
-    model_dir = os.path.join(MODELS_DIR, model_id.replace("/", "-"))
-    print(f"Downloading '{model_id}' to '{model_dir}'...")
-    snapshot_download(repo_id=model_id, local_dir=model_dir, local_dir_use_symlinks=False)
-    print("Download complete.")
-    return model_dir
+def model_local_dir(model_id):
+    username = getpass.getuser()
+    safe_model_id = re.sub(r'[^a-zA-Z0-9_.-]', '_', model_id)
+    return f"{MODELS_BASE}/{username}_{safe_model_id}"
+
+def find_downloaded_folder(model_id):
+    username = getpass.getuser()
+    safe_model_id = re.sub(r'[^a-zA-Z0-9_.-]', '_', model_id)
+    folder = f"{MODELS_BASE}/{username}_{safe_model_id}"
+    if Path(folder).exists():
+        return folder
+    # Fallback: try to find a matching subfolder
+    for d in Path(MODELS_BASE).glob(f"{username}_*"):
+        if safe_model_id in d.name:
+            return str(d)
+    return folder
 
 def update_available_models(new_model_dir):
     with open(WEBUI_FILE, "r") as f:
@@ -52,10 +67,14 @@ def main():
         print("Usage: python add_model.py <huggingface_model_link_or_id>")
         sys.exit(1)
     model_link = sys.argv[1]
-    model_id = model_id_from_link(model_link)
-    model_dir = os.path.join(MODELS_DIR, model_id.replace("/", "-"))
-    download_model(model_id)
-    update_available_models(model_dir)
+    # Accept both full links or just IDs
+    if model_link.startswith("https://huggingface.co/"):
+        model_id = model_link.replace("https://huggingface.co/", "").strip("/")
+    else:
+        model_id = model_link
+    run_download(model_id)
+    local_dir = find_downloaded_folder(model_id)
+    update_available_models(local_dir)
 
 if __name__ == "__main__":
     main()
