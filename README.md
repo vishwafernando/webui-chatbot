@@ -8,7 +8,7 @@ A modern user interface for running Hugging Face text-generation models locally 
 - **Notebook tab** — longform notes/prompt engineering scratchpad
 - **Model selection** — choose from several Hugging Face (local) models
 - **Advanced parameters** — temperature, top-k
-- **Responsive UI** — responsive ui
+- **Responsive UI** — responsive ui 
 - **Runs fully local** — all generation happens on your machine
 
 ## Quickstart

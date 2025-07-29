@@ -32,7 +32,7 @@ def find_downloaded_folder(model_id):
     folder = f"{MODELS_BASE}/{username}_{safe_model_id}"
     if Path(folder).exists():
         return folder
-    # Fallback: try to find a matching subfolder
+    # Fallback: try to find a matching subfolder 
     for d in Path(MODELS_BASE).glob(f"{username}_*"):
         if safe_model_id in d.name:
             return str(d)

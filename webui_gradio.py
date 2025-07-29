@@ -113,7 +113,7 @@ body, .gradio-container { background: #23272e !important; color: #f4f4f4; }
                 regen_btn = gr.Button("Regenerate")
                 cont_btn = gr.Button("Continue")
                 remove_btn = gr.Button("Remove Last")
-        state = gr.State([])  # Chat history
+        state = gr.State([])  # Chat history 
 
         send_btn.click(fn=chat_interface, 
             inputs=[msg, state, persona, model, temperature, top_k], 
