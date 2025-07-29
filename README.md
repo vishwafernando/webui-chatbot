@@ -1,6 +1,6 @@
 # Hugging Face Text Generation WebUI (Gradio Edition)
 
-A modern, oobabooga/text-generation-webui-inspired user interface for running Hugging Face text-generation models locally using Gradio.
+A modern user interface for running Hugging Face text-generation models locally using Gradio.
 
 ## Features
 
@@ -8,7 +8,7 @@ A modern, oobabooga/text-generation-webui-inspired user interface for running Hu
 - **Notebook tab** — longform notes/prompt engineering scratchpad
 - **Model selection** — choose from several Hugging Face (local) models
 - **Advanced parameters** — temperature, top-k
-- **Responsive UI** — closely matches oobabooga/text-generation-webui
+- **Responsive UI** — responsive ui
 - **Runs fully local** — all generation happens on your machine
 
 ## Quickstart
@@ -44,5 +44,4 @@ A modern, oobabooga/text-generation-webui-inspired user interface for running Hu
 
 ## Credits
 
-- Inspired by [oobabooga/text-generation-webui](https://github.com/oobabooga/text-generation-webui)
 - Powered by [Gradio](https://gradio.app/), [Hugging Face Transformers](https://huggingface.co/docs/transformers/index), [huggingface_hub](https://huggingface.co/docs/huggingface_hub/index)
